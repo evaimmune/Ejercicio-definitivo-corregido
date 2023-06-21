@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gastos Tracker</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Gastos Tracker</h1>
+    
+    <h2>Agregar Gasto</h2>
+    <form method="POST">
+        <label for="amount">Monto:</label>
+        <input type="number" name="amount" required>
+        
+        <label for="category">Categoría:</label>
+        <select name="category" required>
+            <option value="Ocio">Ocio</option>
+            <option value="Comida">Comida</option>
+            <option value="Servicios">Servicios</option>
+        </select>
+        
+        <button type="submit">Agregar</button>
+    </form>
+    
+    <h2>Reporte de Gastos</h2>
+    <pre>{{ reporte }}</pre>
+    
+    <h2>Grafico de Gastos por Categoría</h2>
+    <img src="graph.png" alt="Grafico de Gastos por Categoría">
+</body>
+</html>
