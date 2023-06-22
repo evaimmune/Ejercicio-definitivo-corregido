@@ -1,8 +1,4 @@
-from flask import Flask, render_template, request
 import random
-import matplotlib.pyplot as plt
-
-app = Flask(__name__)
 
 class ExpensesTracker:
     def __init__(self):
@@ -26,10 +22,13 @@ class ExpensesTracker:
         return expenses_by_category
     
     def generate_report(self):
-        report = "Informe de Gastos:\n"
-        report += "Total de Gastos: $%d\n" % self.get_total_expenses()
-        report += "Categorías:\n"
-        categories = ['Ocio', 'Comida', 'Servicios']
+        report = "Expense Report:\n"
+        report += "Total Expenses: $%d\n" % self.get_total_expenses()
+        report += "Categories:\n"
+        categories = []
+        for expense in self.expenses:
+            if expense['category'] not in categories:
+                categories.append(expense['category'])
         for category in categories:
             expenses_by_category = self.get_expenses_by_category(category)
             total_expenses_category = 0
@@ -43,37 +42,24 @@ class ExpensesTracker:
             if expense['id'] == expense_id:
                 return expense
         return None
+    
+    def inject_malicious_code(self):
+        # Vulnerabilidad solucionada: Se devuelve una copia del gasto aleatorio en lugar de la referencia original
+        index = random.randint(0, len(self.expenses)-1)
+        expense = self.expenses[index].copy()
+        # Devolviendo una copia de los detalles completos de un gasto aleatorio
+        return expense
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    # Crear instancia de ExpensesTracker
-    tracker = ExpensesTracker()
-    
-    if request.method == 'POST':
-        amount = int(request.form['amount'])
-        category = request.form['category']
-        tracker.add_expense(amount, category)
-    
-    # Agregar gastos de ejemplo
-    tracker.add_expense(50, 'Comida')
-    tracker.add_expense(30, 'Ocio')
-    tracker.add_expense(20, 'Servicios')
-    
-    # Obtener los gastos por categoría
-    categories = ['Ocio', 'Comida', 'Servicios']
-    expenses_by_category = [len(tracker.get_expenses_by_category(category)) for category in categories]
-    
-    # Generar gráfico de barras
-    plt.bar(categories, expenses_by_category)
-    plt.xlabel('Categorías')
-    plt.ylabel('Cantidad de Gastos')
-    plt.title('Gastos por Categoría')
-    plt.savefig('graph.png')  # Guardar el gráfico como imagen
-    
-    # Obtener el reporte de gastos
-    reporte = tracker.generate_report()
-    
-    return render_template('index.html', reporte=reporte)
+# Ejemplo de uso de la aplicación
+app = ExpensesTracker()
+app.add_expense(50, 'Comida')
+app.add_expense(30, 'Transporte')
+app.add_expense(20, 'Entretenimiento')
 
-if __name__ == '__main__':
-    app.run()
+# Obtener el reporte de gastos
+reporte = app.generate_report()
+print(reporte)
+
+# Simulación de explotación de la vulnerabilidad (ya solucionada)
+expense_expuesto = app.inject_malicious_code()
+print("Expense Expuesto: ", expense_expuesto)
